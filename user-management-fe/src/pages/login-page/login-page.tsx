@@ -27,14 +27,14 @@ const LoginPage = () => {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="w-full space-y-4"
+      className="w-full flex justify-center gap-4 items-center flex-col"
     >
       <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white">
         Login
       </h1>
       {errors.email?.message && (
         <div
-          className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          className="flex items-center p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
         >
           <svg
@@ -54,7 +54,7 @@ const LoginPage = () => {
       )}
       {errors.password?.message && (
         <div
-          className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          className="flex items-center p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
         >
           <svg
@@ -75,7 +75,7 @@ const LoginPage = () => {
       {isPending && <Loader />}
       {isSuccess && (
         <div
-          className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+          className="p-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
           role="alert"
         >
           <span className="font-medium">Success!</span>
@@ -83,7 +83,7 @@ const LoginPage = () => {
       )}
       {error?.res?.status && (
         <div
-        className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+        className="flex items-center p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
         role="alert"
       >
         <svg
@@ -104,10 +104,10 @@ const LoginPage = () => {
         </div>
       </div>
       )}
-      <div className="mb-5">
+      <div className="w-full space-y-4">
         <label
           htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Email
         </label>
@@ -115,14 +115,14 @@ const LoginPage = () => {
           type="email"
           id="email"
           {...register("email", { required: true })}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="name@host.com"
         />
       </div>
-      <div className="mb-5">
+      <div className="w-full space-y-4">
         <label
           htmlFor="password"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Password
         </label>
@@ -136,7 +136,7 @@ const LoginPage = () => {
       <button
         disabled={isPending}
         type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-70"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-70 mr-auto"
       >
         Submit
       </button>
