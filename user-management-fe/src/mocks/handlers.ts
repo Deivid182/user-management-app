@@ -7,7 +7,9 @@ export const handlers = [
     await delay(1000)
 
     return HttpResponse.json({
-      data: 'from login'
+      message: "Login successful"
+    }, {
+      status: 401
     })
   })
 ]

@@ -1,11 +1,12 @@
-import axios from "axios";
+import { fetchItem } from "../../utils";
 
 export const loginService = async (email: string, password: string) => {
-  await axios.post("/login", {
-    email, password
-  }, {
-    headers: {
-      "Content-Type": "application/json",
-    }
-  })
+  const { data } = await fetchItem("/login", {
+    method: "POST",
+    body: {
+      email,
+      password,
+    },
+  });
+  return data
 };
