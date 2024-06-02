@@ -1,35 +1,48 @@
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "./login-schema";
+import { loginService } from "./login-service";
 import { useState } from "react";
+import { QueryClient, useMutation } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
-  const [emailErrorMsg, setEmailErrorMsg] = useState("");
-  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
+  const mutation = useMutation({
+    mutationFn: ({ email, password }: Inputs) => {
+      return loginService(email, password);
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formElement = e.currentTarget;
-
-    const formElements = formElement.elements as typeof formElement.elements & {
-      email: { value: string };
-      password: { value: string };
-    };
-
-    const { email, password } = formElements;
-
-    if (!email.value) {
-      setEmailErrorMsg("The email field is required");
-    }
-    if (!password.value) {
-      setPasswordErrorMsg("The password field is required");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Inputs>({
+    resolver: yupResolver(loginSchema),
+  });
+  const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
+    try {
+      mutation.mutate({ email, password });
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="w-full space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="w-full space-y-4"
+    >
       <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white">
         Login
       </h1>
-      {emailErrorMsg.length > 0 && (
+      {errors.email?.message && (
         <div
           className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
@@ -45,11 +58,11 @@ const LoginPage = () => {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">{emailErrorMsg}</span>
+            <span className="font-medium">{errors.email.message}</span>
           </div>
         </div>
       )}
-      {passwordErrorMsg.length > 0 && (
+      {errors.password?.message && (
         <div
           className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
@@ -65,8 +78,16 @@ const LoginPage = () => {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">{passwordErrorMsg}</span>
+            <span className="font-medium">{errors.password.message}</span>
           </div>
+        </div>
+      )}
+      {mutation.isSuccess && (
+        <div
+          className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+          role="alert"
+        >
+          <span className="font-medium">Success!</span>
         </div>
       )}
       <div className="mb-5">
@@ -79,9 +100,9 @@ const LoginPage = () => {
         <input
           type="email"
           id="email"
+          {...register("email", { required: true })}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="name@flowbite.com"
-          required
+          placeholder="name@host.com"
         />
       </div>
       <div className="mb-5">
@@ -94,13 +115,14 @@ const LoginPage = () => {
         <input
           type="password"
           id="password"
+          {...register("password", { required: true })}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          required
         />
       </div>
       <button
+        disabled={mutation.isPending}
         type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-70"
       >
         Submit
       </button>
